@@ -5,9 +5,11 @@ import styles from './board.module.css';
 interface IBoardProps {}
 
 interface IBoardState {
-  squares: Array<SquareValue>;
+  squares: TSquares;
   xIsNext: boolean;
 }
+
+type TSquares = Array<SquareValue>;
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
   constructor(props: IBoardProps) {
@@ -20,6 +22,9 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
 
   handleClick(i: number) {
     const squares = this.state.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({ squares: squares, xIsNext: !this.state.xIsNext });
   }
@@ -34,7 +39,14 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
   }
 
   render() {
-    const status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
+    const winner = calculateWinner(this.state.squares);
+
+    let status;
+    if (winner) {
+      status = 'Выиграл ' + winner;
+    } else {
+      status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
 
     return (
       <div>
@@ -57,4 +69,24 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
       </div>
     );
   }
+}
+
+function calculateWinner(squares: TSquares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 }
