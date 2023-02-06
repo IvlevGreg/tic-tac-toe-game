@@ -54,3 +54,10 @@ ul {
 .game-info {
   margin-left: 20px;
 }
+
+.btn-moves {
+  background: none;
+  border: none;
+
+  cursor: pointer;
+}
