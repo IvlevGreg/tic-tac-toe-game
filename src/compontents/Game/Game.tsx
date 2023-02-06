@@ -59,7 +59,9 @@ export class Game extends React.Component<IGameProps, IGameState> {
       const desc = move ? 'Перейти к ходу #' + move : 'К началу игры';
       return (
         <li>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button className="btn-moves" onClick={() => this.jumpTo(move)}>
+            {desc}
+          </button>
         </li>
       );
     });
